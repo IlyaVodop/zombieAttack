@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float Offset;
+  /*  public float Offset;
     public GameObject Bullet;
     public Transform ShotPoint;
 
@@ -40,5 +40,5 @@ public class Player : MonoBehaviour
         {
             timeBtnShots -= Time.deltaTime;
         }
-    }
+    }*/
 }
