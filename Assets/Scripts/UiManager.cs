@@ -16,29 +16,46 @@ public class UiManager : MonoBehaviour
     }
 
     [SerializeField]
-    private GameObject MenuPanel;
+    private GameObject _menuPanel;
     [SerializeField]
-    private GameObject GameOverPanel;
+    private GameObject _gameOverPanel;
     [SerializeField]
-    private GameObject GamePanel;
+    private GameObject _gamePanel;
 
     public Button GameBtn3D;
 
     [SerializeField]
-    private Text _score;
+    private Text _scoreText;
+
+    [SerializeField]
+    private Text _savedScoreText;
 
 
     private UIState _currentState;
 
     private int _reward;
 
+    private int SavedScore
+    {
+        get
+        {
+            return PlayerPrefs.GetInt("MaxScore", 0);
+        }
+        set
+        {
+            if (value > SavedScore)
+            {
+                PlayerPrefs.SetInt("MaxScore", value);
+            }
+        }
+    }
+
     void Awake()
     {
         _currentState = UIState.Menu;
+        _savedScoreText.text = SavedScore.ToString();
         UpdateState();
-
         Subscribe();
-
     }
 
 
@@ -46,6 +63,7 @@ public class UiManager : MonoBehaviour
     {
         Unsubscribe();
     }
+
 
     private void Subscribe()
     {
@@ -57,7 +75,8 @@ public class UiManager : MonoBehaviour
     private void Enemy3D_OnReward(int reward)
     {
         _reward += reward;
-        _score.text = _reward.ToString();
+        _scoreText.text = _reward.ToString();
+        SavedScore = _reward;
     }
 
     private void Player3D_GameOver()
@@ -74,9 +93,9 @@ public class UiManager : MonoBehaviour
 
     private void UpdateState()
     {
-        MenuPanel.SetActive(_currentState == UIState.Menu);
-        GameOverPanel.SetActive(_currentState == UIState.GameOver);
-        GamePanel.SetActive(_currentState == UIState.Game);
+        _menuPanel.SetActive(_currentState == UIState.Menu);
+        _gameOverPanel.SetActive(_currentState == UIState.GameOver);
+        _gamePanel.SetActive(_currentState == UIState.Game);
     }
 
     private void SetState(UIState state)
@@ -84,7 +103,6 @@ public class UiManager : MonoBehaviour
         _currentState = state;
         UpdateState();
     }
-
     private void StartGame()
     {
         SetState(UIState.Game);
